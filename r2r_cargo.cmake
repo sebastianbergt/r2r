@@ -56,6 +56,7 @@ function(r2r_cargo)
 
   # On OSX colcon eats the DYLD_LIBRARY_PATH... so we need to add the rpaths
   # manually...
+  message("RUSTFLAGS: ${RUSTFLAGS}")
   set(RUSTFLAGS "")
 
   # get imported libs
