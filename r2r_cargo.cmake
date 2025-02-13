@@ -38,6 +38,8 @@ function(get_idl_deps OUT_PKG_DIRS PKG)
     set(${OUT_PKG_DIRS} ${PKG_DIRS} PARENT_SCOPE)
 endfunction()
 
+# message(FATAL_ERROR "Forcing CMake to fail.")
+
 function(r2r_cargo)
   # pretend that we want to compile c code to get all library paths etc...
   add_executable (dummy EXCLUDE_FROM_ALL dummy.c)
@@ -56,6 +58,7 @@ function(r2r_cargo)
 
   # On OSX colcon eats the DYLD_LIBRARY_PATH... so we need to add the rpaths
   # manually...
+  message("RUSTFLAGS before purge: ${RUSTFLAGS}")
   set(RUSTFLAGS "")
 
   # get imported libs

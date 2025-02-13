@@ -1,7 +1,9 @@
 # rust
 /target/
-Cargo.lock
 .envrc
+build/
+install/
+log/
 
 # editor
 *~
