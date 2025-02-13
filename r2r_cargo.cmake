@@ -58,23 +58,23 @@ function(r2r_cargo)
 
   # On OSX colcon eats the DYLD_LIBRARY_PATH... so we need to add the rpaths
   # manually...
-  message("RUSTFLAGS before purge: ${RUSTFLAGS}")
-  set(RUSTFLAGS "")
+  if(APPLE) 
+    set(RUSTFLAGS "")
 
-  # get imported libs
-  get_property(importTargets DIRECTORY "${CMAKE_SOURCE_DIR}" PROPERTY IMPORTED_TARGETS)
+    # get imported libs
+    get_property(importTargets DIRECTORY "${CMAKE_SOURCE_DIR}" PROPERTY IMPORTED_TARGETS)
 
-  foreach(p ${importTargets})
-    get_property(_LIBLOC TARGET "${p}" PROPERTY LOCATION)
-    if(DEFINED _LIBLOC)
-      list(APPEND CMAKE_LIBRARIES "${_LIBLOC}")
-      get_filename_component(_PARENT "${_LIBLOC}" DIRECTORY)
-      if(IS_DIRECTORY ${_PARENT})
-          list(APPEND RUSTFLAGS "-C link-arg=-Wl,-rpath,${_PARENT}")
+    foreach(p ${importTargets})
+      get_property(_LIBLOC TARGET "${p}" PROPERTY LOCATION)
+      if(DEFINED _LIBLOC)
+        list(APPEND CMAKE_LIBRARIES "${_LIBLOC}")
+        get_filename_component(_PARENT "${_LIBLOC}" DIRECTORY)
+        if(IS_DIRECTORY ${_PARENT})
+            list(APPEND RUSTFLAGS "-C link-arg=-Wl,-rpath,${_PARENT}")
+        endif()
       endif()
-    endif()
-  endforeach()
-
+    endforeach()
+  endif()
   list(REMOVE_DUPLICATES RUSTFLAGS)
   string (REPLACE ";" " " RUSTFLAGS_STR "${RUSTFLAGS}")
   set(ENV{RUSTFLAGS} ${RUSTFLAGS_STR})
